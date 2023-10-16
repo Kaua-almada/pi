@@ -1,6 +1,8 @@
 package Domain;
 
-public class estoque {
+import org.json.JSONObject;
+
+public class Products {
     int id = 0;
     public static String name = "";
     public static String factory = "";
@@ -8,7 +10,7 @@ public class estoque {
     //contrutor
     public void Users(){
     }
-    public estoque(String name, String factory, int quantity){
+    public Products(String name, String factory, int quantity){
 
         this.name = name;
         this.factory = factory;
@@ -34,6 +36,13 @@ public class estoque {
 
     public void setQuantity(int quantity){
         this.quantity = quantity;
+    }
+    public static JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", Products.name);
+        json.put("factory", Products.factory);
+        json.put("quantity", Products.quantity);
+        return json;
     }
 }
 
