@@ -6,6 +6,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Servidor.piServer();
+        Servidor servidor = new Servidor();
+        servidor.piServer();
         }
 }

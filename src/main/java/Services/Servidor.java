@@ -1,6 +1,8 @@
 package Services;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import controller.ProductsController;
 import controller.SalesController;
@@ -13,13 +15,35 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
 public class Servidor {
-    public static void piServer() throws IOException {
+    public void piServer() throws IOException {
+        HttpHandler salesHandler = new SalesController.produtos();
+        HttpHandler products = new ProductsController.produtos();
+        HttpHandler userHandler = new UsersController.Usuarios();
+
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-        server.createContext("/api/users", new UsersController.Usuarios());
-        server.createContext("/api/venda", new SalesController.produtos());
-        server.createContext("/api/produtos", new ProductsController.produtos());
+        server.createContext("/api/users",exchange -> {
+            configureCorsHeaders(exchange);
+            userHandler.handle(exchange);
+        });
+        server.createContext("/api/venda", exchange -> {
+            configureCorsHeaders(exchange);
+            salesHandler.handle(exchange);
+        });
+        server.createContext("/api/produtos", exchange -> {
+            configureCorsHeaders(exchange);
+            products.handle(exchange);
+        });
         server.setExecutor(null);
         System.out.println("Servidor iniciado");
         server.start();
+    }
+    private static void configureCorsHeaders(HttpExchange exchange) {
+        Headers headers = exchange.getResponseHeaders();
+        String requestOrigin = exchange.getRequestHeaders().getFirst("Origin");
+        if (requestOrigin != null) {
+            headers.set("Access-Control-Allow-Origin", requestOrigin);
+        }
+        headers.set("Access-Control-Allow-Methods", "GET, OPTIONS, POST, PUT, DELETE");
+        headers.set("Access-Control-Allow-Headers", "Content-Type");
     }
 }

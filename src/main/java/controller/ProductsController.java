@@ -16,17 +16,21 @@ public class ProductsController {
     public static class produtos implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String response = "";
-            JSONObject responseJson = new JSONObject();
+                if ("GET".equals(exchange.getRequestMethod())) {
+                List<Products> getAllFromArray = Products.getAllProducts(productsList);
+                Products productsJson = new Products();
 
-            responseJson.put("name", Products.name);
-            responseJson.put("factory", Products.factory);
-            responseJson.put("quantity", Products.quantity);
+                if(!getAllFromArray.isEmpty()){
+                    for(Products products : getAllFromArray){
+                    System.out.println("name: " + products.getName());
+                    System.out.println("factory : " + products.getFactory() );
+                    System.out.println("quantity: " + products.getQuantity());
+                    System.out.println("-------------------------");
+                    System.out.println();
+                    }
+                    res.enviarResponseJson(exchange, productsJson.arraytoJson(getAllFromArray), 200);
+                }
 
-            if ("GET".equals(exchange.getRequestMethod())) {
-//                response = "essa e a rota de Poducts get";
-                RespostaEndPoint.enviarResponseJson(exchange, responseJson, 200);
-//                responseEndPoint.EnviarResponse(exchange, response);
             } else if ("POST".equals(exchange.getRequestMethod())) {
                 try (InputStream resquestBody = exchange.getRequestBody()){
                     JSONObject json = new JSONObject(new String(resquestBody.readAllBytes()));
@@ -40,22 +44,28 @@ public class ProductsController {
                 res.enviarResponseJson(exchange, products.toJson(), 200);
                 System.out.println("productslist" + products.toJson());
                 }catch(Exception e){
-                    response = "erro";
+
                     String resposta  = e.toString();
-                    res.enviarResponseJson(exchange, responseJson, 200);
+//                    res.enviarResponseJson(exchange, responseJson, 200);
 //
                 }
 
-                RespostaEndPoint.enviarResponseJson(exchange, responseJson, 200);
+//                RespostaEndPoint.enviarResponseJson(exchange, responseJson, 200);
             } else if ("PUT".equals(exchange.getRequestMethod())) {
-                response = "essa e a rota de Poducts Put";
-                RespostaEndPoint.enviarResponseJson(exchange, responseJson, 200);
+//                response = "essa e a rota de Poducts Put";
+//                RespostaEndPoint.enviarResponseJson(exchange, , 200);
             } else if ("DELETE".equals(exchange.getRequestMethod())) {
-                response = "essa e a rota de Poducts Delete";
-                RespostaEndPoint.enviarResponseJson(exchange, responseJson, 200);
-            }else {
-                response = "ERRO" + "o metodo utilizado foi "+ exchange.getRequestMethod();
-                RespostaEndPoint.enviarResponseJson(exchange, responseJson, 405);
+
+//                RespostaEndPoint.enviarResponseJson(exchange, , 200);
+            }else if ("OPTIONS".equals(exchange.getRequestMethod())){
+                exchange.sendResponseHeaders(200,-1);
+                exchange.close();
+                return;
             }
+            else {
+//                response = "ERRO" + "o metodo utilizado foi "+ exchange.getRequestMethod();
+//                RespostaEndPoint.enviarResponseJson(exchange, responseJson, 405);
+            }
+
         }}
 }

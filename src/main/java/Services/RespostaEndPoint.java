@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class RespostaEndPoint {
-    public static void EnviarResponse(HttpExchange exchange, String response,
+    public static void enviarResponse(HttpExchange exchange, String response,
                                       Integer statusCode) throws IOException {
 
         exchange.sendResponseHeaders(200, response.getBytes().length);

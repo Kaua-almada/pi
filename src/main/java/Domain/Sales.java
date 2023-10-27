@@ -2,15 +2,19 @@ package Domain;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class Sales {
-    public static int id = 0;
-    public static String user = "";
-    public static String produts = "";
-    public static String valor =  "";
-    public static boolean finishedSale = false;
-    public static Double discount = 0.0;
-    public static String dateSale = "";
-    public void Users(){
+    public int id = 0;
+    public String user = " ";
+    public String produts = " ";
+    public String valor =  " ";
+    public boolean finishedSale = false;
+    public Double discount = 0.0;
+    public String dateSale = "";
+
+    public Sales(){
+
     }
     public Sales(String user, String produts, String valor,boolean finishedSale, double discount, String dateSale){
 
@@ -61,13 +65,45 @@ public class Sales {
 
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        json.put("name", Sales.user);
-        json.put("produts", Sales.produts);
-        json.put("valor", Sales.valor);
-        json.put("finishedSale", Sales.finishedSale);
-        json.put("discount", Sales.discount);
-        json.put("dateSale", Sales.dateSale);
+        json.put("user", user);
+        json.put("produts", produts);
+        json.put("valor", valor);
+        json.put("finishedSale", finishedSale);
+        json.put("discount", discount);
+        json.put("dateSale", dateSale);
         return json;
+    }
+
+    public static List<Sales> getAllSales(List<Sales> salesList){return salesList;}
+    public JSONObject arraytoJson(List<Sales> salesListArray) {
+            JSONObject json = new JSONObject();
+
+            if (!salesListArray.isEmpty()) {
+                var keyJson = 0;
+                for (Sales sales : salesListArray) {
+                    JSONObject valorJson = new JSONObject();
+                    valorJson.put("user", sales.getUser());
+                    valorJson.put("produts", sales.getProduts());
+                    valorJson.put("valor", sales.getvalor());
+                    valorJson.put("finishedSale", sales.getFinishedSale());
+                    valorJson.put("discount", sales.getdiscount());
+                    valorJson.put("dateSale", sales.getdateSale());
+                    json.put(String.valueOf(keyJson), valorJson);
+
+                    keyJson++;
+                }
+
+                return json;
+            }else {
+                return null;
+            }
+    }
+    public static Sales getSales(int index, List<Sales> salesList) {
+        if (index >= 0 && index < salesList.size()) {
+            return salesList.get(index);
+        }else {
+            return null;
+        }
     }
 }
 
